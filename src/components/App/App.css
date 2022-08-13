@@ -1,0 +1,66 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 2rem;
+  gap: 1rem;
+}
+
+header,
+main {
+  width: 100%;
+}
+
+main {
+  flex: 1;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0.1rem solid var(--black);
+  font-size: 1.2em;
+}
+
+.mobile header {
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+header .left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mobile header .left {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+header h1 {
+  background: var(--black);
+  color: var(--white);
+  padding: 0.2rem 0.8rem;
+  font-size: 1.2em;
+  font-weight: normal;
+  flex-shrink: 0;
+}
+
+.mobile header h1 {
+  font-size: 1em;
+}
+
+header h3 {
+  font-weight: normal;
+  font-style: italic;
+  font-size: 1em;
+  flex-shrink: 0;
+}
+
+header .right {
+  text-align: right;
+}

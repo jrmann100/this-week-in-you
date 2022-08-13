@@ -1,0 +1,16 @@
+#root {
+  height: 100%;
+  font-size: 1rem;
+}
+
+button.linklike {
+  background: none !important;
+  border: none;
+  padding: 0 !important;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+button.linklike:hover {
+  text-decoration: underline;
+}
