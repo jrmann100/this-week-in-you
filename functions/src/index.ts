@@ -1,5 +1,6 @@
 // https://github.com/Bostonhacks/inviare/blob/master/functions/index.js
 // https:// firebase.google.com/docs/storage/extend-with-functions
+// firebase.google.com/docs/firestore/extend-with-functions
 import * as functions from "firebase-functions";
 import busboy from "busboy";
 import {simpleParser} from "mailparser";
@@ -11,6 +12,7 @@ import admin from "firebase-admin";
 
 admin.initializeApp();
 const bucket = admin.storage().bucket("attachments");
+const collection = admin.firestore().collection("submissions");
 
 export const sendgrid = functions.https.onRequest(async (req, res) => {
   const bb = busboy({headers: req.headers});
@@ -61,20 +63,25 @@ export const sendgrid = functions.https.onRequest(async (req, res) => {
                 await fs.unlink(tmpOriginalFilename);
               }
               // todo metadata?
-              const upload = await bucket.upload(tmpConvertedFilename, {
+              await bucket.upload(tmpConvertedFilename, {
                 destination: path.basename(tmpConvertedFilename),
               });
               await fs.unlink(tmpConvertedFilename);
-              functions.logger.log("uploaded image", upload[1].selfLink);
-              return upload[1].selfLink;
+              return tmpConvertedFilename;
             })
     );
-    console.log({
+    const email = {
       subject: parsed.subject,
       from: parsed.from?.value,
-      images: imageLinks,
+      attachmnents: imageLinks,
       text: parsed.text,
-    });
+    };
+    functions.logger.log(
+        "submission:",
+        email,
+        "->",
+        (await collection.add(email)).id
+    );
   });
   bb.end(req.rawBody);
   res.sendStatus(200);
