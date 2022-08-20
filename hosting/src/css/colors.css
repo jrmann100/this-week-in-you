@@ -1,0 +1,54 @@
+html {
+  --white: #fff;
+  --black: #222;
+  --good: darkseagreen;
+  --bad: lightcoral;
+  --accent: mediumslateblue;
+  --noise: url("//img/noise.png");
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    --black: #eee;
+    --white: #222;
+    --accent: plum;
+  }
+}
+
+body {
+  color: var(--black);
+  font-family: "Inter", system-ui, Helvetica, Arial, sans-serif;
+  accent-color: var(--accent);
+}
+
+.solid {
+  background-color: var(--white);
+  background-image: var(--noise);
+}
+
+*:focus-visible {
+  outline-color: var(--accent);
+  outline-width: 0.1rem;
+  outline-style: solid;
+}
+
+@media print, (prefers-contrast: more), (forced-colors: active) {
+  html,
+  html[data-color-scheme] {
+    --black: black;
+    --white: white;
+    --accent: mediumslateblue;
+  }
+
+  body {
+    background-image: none;
+  }
+}
+
+a {
+  color: var(--accent);
+}
+
+a:hover {
+  text-decoration: none;
+}
