@@ -11,7 +11,7 @@ import { spawn } from "child-process-promise";
 import admin from "firebase-admin";
 
 admin.initializeApp();
-const bucket = admin.storage().bucket("attachments");
+const bucket = admin.storage().bucket();
 const collection = admin.firestore().collection("submissions");
 
 export const sendgrid = functions.https.onRequest(async (req, res) => {
@@ -63,11 +63,15 @@ export const sendgrid = functions.https.onRequest(async (req, res) => {
             await fs.unlink(tmpOriginalFilename);
           }
           // todo metadata?
-          await bucket.upload(tmpConvertedFilename, {
-            destination: path.basename(tmpConvertedFilename),
+          const upload = await bucket.upload(tmpConvertedFilename, {
+            destination: path.join(
+              "attachments",
+              path.basename(tmpConvertedFilename)
+            ),
           });
+          functions.logger.debug("uploaded", upload[0].name);
           await fs.unlink(tmpConvertedFilename);
-          return tmpConvertedFilename;
+          return upload[0].name;
         })
     );
     const email = {
@@ -82,7 +86,7 @@ export const sendgrid = functions.https.onRequest(async (req, res) => {
       "->",
       (await collection.add(email)).id
     );
+    res.status(200).send(email);
   });
   bb.end(req.rawBody);
-  res.sendStatus(200);
 });
